@@ -12,13 +12,13 @@ class Window(QWidget):
         weight = const.BOARD_SIZE[1] * const.CELL_SIZE
         self.setGeometry(const.WINDOW_SIZE[0], const.WINDOW_SIZE[1],
                          height, weight)
-        numbers = Window.open_file('numb.txt')
+        numbers = Window.read_field_from_file('numb.txt')
 
         positions = [(i, j) for i in range(const.BOARD_SIZE[0])
                      for j in range(const.BOARD_SIZE[1])]
 
         for pos, number in zip(positions, numbers):
-            btn = MyButton(number, self)
+            btn = Button(number, self)
             btn.setGeometry(pos[0] * const.CELL_SIZE, pos[1] * const.CELL_SIZE,
                             const.CELL_SIZE, const.CELL_SIZE)
             btn.setStyleSheet("QPushButton { background-color: %s }"
@@ -26,19 +26,20 @@ class Window(QWidget):
         self.show()
 
     @staticmethod
-    def open_file(file_name: str):
+    def read_field_from_file(file_name: str):
         with open(file_name) as f:
             numbers = f.read()
             numbers = numbers.split()
         return numbers
 
 
-class MyButton(QPushButton):
+class Button(QPushButton):
 
-    def __init__(self, *args):
+    def __init__(self, number, *args):
         super().__init__(*args)
         self.color = const.Color.BLUE
         self.clicked.connect(self.click)
+        self.number = number
 
     def click(self):
         if self.color in (const.Color.BLUE, const.Color.GREY):

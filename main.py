@@ -36,7 +36,7 @@ class Window(QWidget):
 class Button(QPushButton):
 
     def __init__(self, number, *args):
-        super().__init__(*args)
+        super().__init__(number, *args)
         self.color = const.Color.BLUE
         self.clicked.connect(self.click)
         self.number = number

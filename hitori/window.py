@@ -12,19 +12,15 @@ class Window(QWidget):
         self.setGeometry(const.WINDOW_SIZE[0], const.WINDOW_SIZE[1],
                          height, weight)
         numbers = Window.read_field_from_file('numb.txt')
-
-        positions = [(i, j) for i in range(const.BOARD_SIZE[0])
-                     for j in range(const.BOARD_SIZE[1])]
-
-        for pos, number in zip(positions, numbers):
-            Button(number, pos, self)
+        for row in range(const.BOARD_SIZE[0]):
+            for column in range(const.BOARD_SIZE[1]):
+                Button(numbers[row][column], (row, column), self)
         self.show()
 
     @staticmethod
     def read_field_from_file(file_name: str):
         with open(file_name) as f:
-            numbers = f.read()
-            numbers = numbers.split()
+            numbers = list(map(lambda x: x.split(), f.readlines()))
         return numbers
 
 

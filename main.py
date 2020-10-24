@@ -1,6 +1,5 @@
 import sys
-from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton, QApplication)
-import enum
+from PyQt5.QtWidgets import (QWidget, QPushButton, QApplication)
 from hitori import const
 
 
@@ -13,10 +12,7 @@ class Window(QWidget):
         weight = const.BOARD_SIZE[1] * const.CELL_SIZE
         self.setGeometry(const.WINDOW_SIZE[0], const.WINDOW_SIZE[1],
                          height, weight)
-        file_name = 'numb.txt'
-        with open(file_name) as f:
-            numbers = f.read()
-            numbers = numbers.split()
+        numbers = Window.open_file('numb.txt')
 
         positions = [(i, j) for i in range(const.BOARD_SIZE[0])
                      for j in range(const.BOARD_SIZE[1])]
@@ -29,6 +25,13 @@ class Window(QWidget):
                               % const.Color.BLUE)
         self.show()
 
+    @staticmethod
+    def open_file(file_name: str):
+        with open(file_name) as f:
+            numbers = f.read()
+            numbers = numbers.split()
+        return numbers
+
 
 class MyButton(QPushButton):
 
@@ -38,7 +41,7 @@ class MyButton(QPushButton):
         self.clicked.connect(self.click)
 
     def click(self):
-        if self.color in (const.Color.GREY, const.Color.GREY):
+        if self.color in (const.Color.BLUE, const.Color.GREY):
             self.color = const.Color.WHITE
         else:
             self.color = const.Color.GREY

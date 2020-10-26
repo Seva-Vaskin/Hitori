@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import (QWidget, QPushButton, QApplication)
+from PyQt5.QtWidgets import QWidget, QPushButton
 from . import const
 
 
@@ -12,9 +12,12 @@ class Window(QWidget):
         self.setGeometry(const.WINDOW_SIZE[0], const.WINDOW_SIZE[1],
                          height, weight)
         numbers = Window.read_field_from_file('numb.txt')
+        self.board = [[0] * const.BOARD_SIZE[1] for i in range(
+            const.BOARD_SIZE[0])]
         for row in range(const.BOARD_SIZE[0]):
             for column in range(const.BOARD_SIZE[1]):
-                Button(numbers[row][column], (row, column), self)
+                self.board[row][column] = Button(numbers[row][column],
+                                                 (row, column), self)
         self.show()
 
     @staticmethod
@@ -28,17 +31,17 @@ class Button(QPushButton):
 
     def __init__(self, number, pos, *args):
         super().__init__(number, *args)
-        self.color = const.Color.BLUE
+        self.state = const.State.NEUTRAL
         self.clicked.connect(self.click)
         self.number = number
         self.setGeometry(pos[0] * const.CELL_SIZE, pos[1] * const.CELL_SIZE,
                          const.CELL_SIZE, const.CELL_SIZE)
         self.setStyleSheet("QPushButton { background-color: %s }"
-                           % const.Color.BLUE)
+                           % self.state.value)
 
     def click(self):
-        if self.color in (const.Color.BLUE, const.Color.GREY):
-            self.color = const.Color.WHITE
+        if self.state in (const.State.NEUTRAL, const.State.BLACK):
+            self.state = const.State.WHITE
         else:
-            self.color = const.Color.GREY
-        self.setStyleSheet("QPushButton { background-color: %s }" % self.color)
+            self.state = const.State.BLACK
+        self.setStyleSheet("QPushButton { background-color: %s }" % self.state)

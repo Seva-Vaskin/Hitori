@@ -1,11 +1,12 @@
 """Модуль, описывающий константы, используемые в проекте."""
 
+from enum import Enum
 
-class Color:
-    """Цвета, необходимые для реализации игры."""
-    GREY = 'grey'
+
+class State(Enum):
+    BLACK = 'grey'
     WHITE = 'white'
-    BLUE = 'lightblue'
+    NEUTRAL = 'lightblue'
 
 
 WINDOW_SIZE = (450, 100)

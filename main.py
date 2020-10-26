@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import (QWidget, QPushButton, QApplication)
+from PyQt5.QtWidgets import QApplication
 from hitori import window
 
 if __name__ == '__main__':

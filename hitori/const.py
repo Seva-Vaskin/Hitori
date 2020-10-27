@@ -4,6 +4,11 @@ from enum import Enum
 
 
 class State(Enum):
+    """Описывает состояние клетки:
+    EMPTY - клетка в нейтральном состоянии,
+    BLACK - клетка закрашена,
+    WHITE - клетка белая.
+    """
     BLACK = 'grey'
     WHITE = 'white'
     NEUTRAL = 'lightblue'

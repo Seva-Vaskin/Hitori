@@ -1,5 +1,10 @@
-from PyQt5.QtWidgets import QWidget, QPushButton
-from . import const
+"""Модуль, отвечающий за игровое окно."""
+
+from PyQt5.QtWidgets import QWidget
+from typing import List
+
+from . import const, driver
+from hitori.button import Button
 
 
 class Window(QWidget):
@@ -18,30 +23,17 @@ class Window(QWidget):
             for column in range(const.BOARD_SIZE[1]):
                 self.board[row][column] = Button(numbers[row][column],
                                                  (row, column), self)
+                self.board[row][column].clicked.connect(self.button_clicked)
         self.show()
 
     @staticmethod
-    def read_field_from_file(file_name: str):
+    def read_field_from_file(file_name: str) -> List[str]:
+        """Читает игровое поле из файла."""
         with open(file_name) as f:
             numbers = list(map(lambda x: x.split(), f.readlines()))
         return numbers
 
-
-class Button(QPushButton):
-
-    def __init__(self, number, pos, *args):
-        super().__init__(number, *args)
-        self.state = const.State.NEUTRAL
-        self.clicked.connect(self.click)
-        self.number = number
-        self.setGeometry(pos[0] * const.CELL_SIZE, pos[1] * const.CELL_SIZE,
-                         const.CELL_SIZE, const.CELL_SIZE)
-        self.setStyleSheet("QPushButton { background-color: %s }"
-                           % self.state.value)
-
-    def click(self):
-        if self.state in (const.State.NEUTRAL, const.State.BLACK):
-            self.state = const.State.WHITE
-        else:
-            self.state = const.State.BLACK
-        self.setStyleSheet("QPushButton { background-color: %s }" % self.state)
+    def button_clicked(self) -> None:
+        """Печатает 'Solved', если головоломка решена."""
+        if driver.is_solved(self.board):
+            print('Solved')

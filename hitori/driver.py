@@ -36,7 +36,7 @@ def shaded_cell_without_common_sides(row: int, col: int,
     return True
 
 
-def bfs(row: int, col: int, board: List[Button], used: List[List[bool]]):
+def bfs(row: int, col: int, board: List[List[Button]], used: List[List[bool]]):
     used[row][col] = True
     queue = Queue()
     queue.put((row, col))
@@ -84,7 +84,7 @@ def is_solved(board: List[List[Button]]):
             if board[row][col].state == const.State.BLACK:
                 continue
             if not flag:
-                bfs(row, col, used, board)
+                bfs(row, col, board, used)
                 flag = True
             elif not used[row][col]:
                 return False

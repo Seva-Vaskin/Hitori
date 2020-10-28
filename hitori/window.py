@@ -1,6 +1,6 @@
 """Модуль, отвечающий за игровое окно."""
 
-from PyQt5.QtWidgets import QWidget
+from PyQt5.QtWidgets import QWidget, QLabel
 from typing import List
 
 from . import const, driver

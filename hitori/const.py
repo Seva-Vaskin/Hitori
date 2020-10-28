@@ -14,7 +14,7 @@ class State(Enum):
     NEUTRAL = 'lightblue'
 
 
-WINDOW_SIZE = (450, 100)
+WINDOW_POS = (450, 100)
 # Размеры поля в клетках (высота, ширина)
 BOARD_SIZE = (8, 8)
 

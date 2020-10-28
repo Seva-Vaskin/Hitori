@@ -14,7 +14,7 @@ class Window(QWidget):
         self.setWindowTitle('Hitori')
         height = const.BOARD_SIZE[0] * const.CELL_SIZE
         weight = const.BOARD_SIZE[1] * const.CELL_SIZE
-        self.setGeometry(const.WINDOW_SIZE[0], const.WINDOW_SIZE[1],
+        self.setGeometry(const.WINDOW_POS[0], const.WINDOW_POS[1],
                          height, weight)
         numbers = Window.read_field_from_file('numb.txt')
         self.board = [[0] * const.BOARD_SIZE[0] for i in range(

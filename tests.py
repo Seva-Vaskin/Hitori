@@ -1,3 +1,5 @@
+"""Тестовый модуль."""
+
 import const
 from board import Cell, Board
 

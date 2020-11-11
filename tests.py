@@ -85,14 +85,6 @@ def test_is_solved():
         for col in range(const.BOARD_SIZE[1]):
             board[row, col] = const.State.WHITE
     assert not board.is_solved()
-    numbers = [[7, 7, 4, 8, 5, 8, 3, 3],
-               [2, 3, 6, 4, 7, 4, 1, 8],
-               [6, 6, 4, 4, 3, 2, 2, 1],
-               [6, 2, 7, 5, 1, 2, 3, 3],
-               [5, 2, 1, 4, 4, 5, 6, 8],
-               [7, 7, 7, 2, 4, 8, 4, 6],
-               [1, 8, 2, 7, 6, 5, 4, 4],
-               [3, 3, 5, 6, 6, 7, 8, 4]]
     blacks = [(0, 1), (0, 5), (0, 7),
               (1, 3),
               (2, 0), (2, 2), (2, 5),

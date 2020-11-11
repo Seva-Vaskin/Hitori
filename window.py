@@ -9,7 +9,7 @@ from board import Board, Cell
 class Button(QPushButton):
     """Класс кнопки."""
 
-    def __init__(self, cell: Cell, pos, *args):
+    def __init__(self, cell: Cell, pos, *args) -> None:
         super().__init__(str(cell.number), *args)
         self.clicked.connect(self.click)
         self.cell = cell
@@ -31,7 +31,7 @@ class Button(QPushButton):
 class Window(QWidget):
     """Класс игрового окна."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.setWindowTitle('Hitori')
         height = const.BOARD_SIZE[0] * const.CELL_SIZE

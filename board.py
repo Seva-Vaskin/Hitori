@@ -7,11 +7,15 @@ from typing import List, Set, Tuple
 
 class Cell:
     """Класс клетки."""
-    def __init__(self, state: const.State, number: int):
+
+    def __init__(self, state: const.State, number: int) -> None:
         self.state = state
         self.number = number
 
     def cell_without_same_numbers(self, white_nums: Set[int]) -> bool:
+        """Проверяет, что в каждой строке и столбце
+        среди белых клеток нет одинаковых цифр.
+        """
         if self.state == const.State.NEUTRAL:
             return False
         if self.state == const.State.BLACK:
@@ -25,7 +29,8 @@ class Cell:
 
 class Board:
     """Класс логического игрового поля."""
-    def __init__(self):
+
+    def __init__(self) -> None:
         self.board = list()
         numbers = self.read_numbers_from_file(const.FILE)
         for i in range(const.BOARD_SIZE[0]):
@@ -34,9 +39,11 @@ class Board:
                 self.board[i].append(Cell(const.State.NEUTRAL, numbers[i][j]))
 
     def __getitem__(self, pos: Tuple[int, int]) -> Cell:
+        """Возвращает клетку по её координатам."""
         return self.board[pos[0]][pos[1]]
 
-    def __setitem__(self, pos: Tuple[int, int], state: const.State):
+    def __setitem__(self, pos: Tuple[int, int], state: const.State) -> None:
+        """"Устанавливает в клетку заданное значение."""
         self.board[pos[0]][pos[1]].state = state
 
     @staticmethod
@@ -51,9 +58,13 @@ class Board:
 
     @staticmethod
     def on_board(row: int, col: int) -> bool:
-        return 0 <= row < const.BOARD_SIZE[0] and 0 <= col < const.BOARD_SIZE[1]
+        """Проверяет, что клетка находится в пределах игрового поля."""
+        is_on_row = 0 <= row < const.BOARD_SIZE[0]
+        is_on_col = 0 <= col < const.BOARD_SIZE[1]
+        return is_on_row and is_on_col
 
-    def shaded_cell_without_common_sides(self, row: int, col: int):
+    def shaded_cell_without_common_sides(self, row: int, col: int) -> bool:
+        """Проверяет, что закрашенные ячейки не имеют общих сторон."""
         if self[row, col].state != const.State.BLACK:
             return True
         delta = [(0, 1), (0, -1), (1, 0), (-1, 0)]
@@ -67,6 +78,7 @@ class Board:
         return True
 
     def bfs(self, row: int, col: int, used: List[List[bool]]) -> None:
+        """Реализует поиск в ширину (bfs)."""
         assert self[row, col].state == const.State.WHITE
         used[row][col] = True
         queue = Queue()
@@ -86,7 +98,8 @@ class Board:
                 used[neighbor_row][neighbor_col] = True
                 queue.put((neighbor_row, neighbor_col))
 
-    def is_solved(self):
+    def is_solved(self) -> bool:
+        """Проверяет, решена ли головоломка."""
         # check 1st condition
         for row in range(const.BOARD_SIZE[0]):
             white_nums = set()

@@ -33,7 +33,7 @@ class Board:
         """Возвращает клетку по её координатам."""
         return self.board[pos[0]][pos[1]]
 
-    def __setitem__(self, pos: Tuple[int, int], new_state: const.State) -> None:
+    def __setitem__(self, pos: Pos, new_state: const.State) -> None:
         """"Устанавливает в клетку заданное значение."""
         if self[pos].state == new_state:
             return
@@ -59,11 +59,11 @@ class Board:
             self.errors.neutral_cells += 1
         self.board[pos[0]][pos[1]].state = new_state
 
-    def update_white_errors(self, pos: Tuple[int, int], sign: int) -> None:
+    def update_white_errors(self, pos: Pos, sign: int) -> None:
         self.check_row(pos, sign)
         self.check_column(pos, sign)
 
-    def update_black_errors(self, pos: Tuple[int, int], sign: int) -> None:
+    def update_black_errors(self, pos: Pos, sign: int) -> None:
         delta = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         for delta_row, delta_col in delta:
             new_row = pos[0] + delta_row
@@ -75,7 +75,7 @@ class Board:
             self.change_conflicts((new_row, new_col), sign)
             self.change_conflicts(pos, sign)
 
-    def switch_cell_color(self, pos: Tuple[int, int]) -> const.State:
+    def switch_cell_color(self, pos: Pos) -> const.State:
         if self[pos].state == const.State.WHITE:
             self[pos] = const.State.BLACK
         else:
@@ -128,7 +128,7 @@ class Board:
                 return False
         return True
 
-    def bfs(self, pos: Tuple[int, int]) -> Set[Tuple[int, int]]:
+    def bfs(self, pos: Pos) -> Set[Pos]:
         """Реализует поиск в ширину (bfs)."""
         assert self[pos].state == const.State.WHITE
         used = set()
@@ -151,7 +151,7 @@ class Board:
                 queue.put((neighbor_row, neighbor_col))
         return used
 
-    def check_row(self, pos: Tuple[int, int], sign: int) -> None:
+    def check_row(self, pos: Pos, sign: int) -> None:
         row, col = pos
         for i in range(const.BOARD_SIZE[1]):
             if i == col or self[row, i].number != self[pos].number:
@@ -163,7 +163,7 @@ class Board:
             self.change_conflicts((row, i), sign)
             self.change_conflicts(pos, sign)
 
-    def check_column(self, pos: Tuple[int, int], sign: int) -> None:
+    def check_column(self, pos: Pos, sign: int) -> None:
         row, col = pos
         for i in range(const.BOARD_SIZE[0]):
             if i == row or self[i, col].number != self[pos].number:
@@ -173,7 +173,7 @@ class Board:
             self.change_conflicts((i, col), sign)
             self.change_conflicts(pos, sign)
 
-    def change_conflicts(self, pos: Tuple[int, int], value: int):
+    def change_conflicts(self, pos: Pos, value: int):
         """Прибавялет к self[pos].conflicts значение value"""
         if self[pos].conflicts == 0 and self[pos].conflicts + value != 0:
             self.errors.conflicts.add(pos)

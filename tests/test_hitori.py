@@ -1,7 +1,7 @@
 """Тестовый модуль."""
 
-import const
-from board import Cell, Board
+from hitori import const
+from hitori.board import Cell, Board
 
 
 def test_cell_without_same_numbers():

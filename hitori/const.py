@@ -4,6 +4,7 @@ from enum import Enum
 
 
 class CellColors:
+    """Описывает цвета, в которые может быть раскрашена клетка."""
     BLACK = 'grey'
     WHITE = 'white'
     NEUTRAL = 'lightblue'
@@ -13,9 +14,9 @@ class CellColors:
 
 class State(Enum):
     """Описывает состояние клетки:
-    EMPTY - клетка в нейтральном состоянии,
     BLACK - клетка закрашена,
-    WHITE - клетка белая.
+    WHITE - клетка белая,
+    NEUTRAL - клетка в нейтральном состоянии.
     """
     BLACK = CellColors.BLACK
     WHITE = CellColors.WHITE

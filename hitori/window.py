@@ -20,11 +20,12 @@ class Button(QPushButton):
         self.highlighted_cells = list()
 
     def click(self) -> None:
-        """Меняет цвет кнопки при нажатии на неё."""
+        """Вызывает change_color при нажатии на кнопку."""
         new_color = self.board.switch_cell_color(self.pos)
         self.change_color(new_color)
 
-    def change_color(self, color):
+    def change_color(self, color) -> None:
+        """Перекрашивает кнопку в нужный цвет."""
         self.setStyleSheet("QPushButton { background-color: %s }" % color)
 
 
@@ -47,7 +48,8 @@ class Window(QWidget):
                 self.buttons[row][col].clicked.connect(self.button_clicked)
         self.show()
 
-    def highlight_conflict_cells(self):
+    def highlight_conflict_cells(self) -> None:
+        """Подсвечивает конфликтующие между собой ячейки."""
         for row, col in self.board.errors.conflicts:
             if self.board[row, col].state == const.State.WHITE:
                 self.buttons[row][col].change_color(

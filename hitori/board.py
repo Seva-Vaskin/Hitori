@@ -34,7 +34,9 @@ class Board:
         return self.board[pos[0]][pos[1]]
 
     def __setitem__(self, pos: Pos, new_state: const.State) -> None:
-        """"Устанавливает в клетку заданное значение."""
+        """"Устанавливает в клетку заданное значение;
+        Обновляет конфликты на поле.
+        """
         if self[pos].state == new_state:
             return
         # отмена конфликтов

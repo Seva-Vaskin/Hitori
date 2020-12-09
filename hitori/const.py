@@ -29,4 +29,4 @@ BOARD_SIZE = (8, 8)
 # Размер клетки в пикселях
 CELL_SIZE = 100
 
-FILE = "../resources/levels/numb.txt"
+FILE = "../resources/levels/7x7.txt"

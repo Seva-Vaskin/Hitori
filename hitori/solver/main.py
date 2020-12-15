@@ -6,7 +6,7 @@ from copy import deepcopy
 
 def change(board: Board, row: int, col: int, state: const.State) -> bool:
     """Пытается изменить состояние клетки (row, col) на state. Если
-    получилось возращает true, иначе false.
+    получилось, возращает true, иначе false.
     !!! В случае неудачи не изменяет поле.
     """
     delta = [(0, 1), (0, -1), (1, 0), (-1, 0)]

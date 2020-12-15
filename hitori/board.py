@@ -62,10 +62,12 @@ class Board:
         self.board[pos[0]][pos[1]].state = new_state
 
     def update_white_errors(self, pos: Pos, sign: int) -> None:
+        """Обновляет конфликты белых ячеек."""
         self.check_row(pos, sign)
         self.check_column(pos, sign)
 
     def update_black_errors(self, pos: Pos, sign: int) -> None:
+        """Обновляет конфликты чёрных ячеек."""
         delta = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         for delta_row, delta_col in delta:
             new_row = pos[0] + delta_row
@@ -78,6 +80,7 @@ class Board:
             self.change_conflicts(pos, sign)
 
     def switch_cell_color(self, pos: Pos) -> const.State:
+        """Изменяет цвет клетки."""
         if self[pos].state == const.State.WHITE:
             self[pos] = const.State.BLACK
         else:
@@ -175,8 +178,8 @@ class Board:
             self.change_conflicts((i, col), sign)
             self.change_conflicts(pos, sign)
 
-    def change_conflicts(self, pos: Pos, value: int):
-        """Прибавялет к self[pos].conflicts значение value"""
+    def change_conflicts(self, pos: Pos, value: int) -> None:
+        """Прибавялет к self[pos].conflicts значение value."""
         if self[pos].conflicts == 0 and self[pos].conflicts + value != 0:
             self.errors.conflicts.add(pos)
         elif self[pos].conflicts != 0 and self[pos].conflicts + value == 0:
@@ -197,6 +200,7 @@ class Board:
 
 
 class RuleError:
+    """Класс ошибок."""
     def __int__(self):
         self.conflicts = set()
         self.neutral_cells = const.BOARD_SIZE[0] * const.BOARD_SIZE[1]

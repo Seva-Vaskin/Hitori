@@ -14,14 +14,13 @@ class Button(QPushButton):
         self.clicked.connect(self.click)
         self.pos = pos
         self.board = board
-        self.setGeometry(pos[0] * const.CELL_SIZE, pos[1] * const.CELL_SIZE,
+        self.setGeometry(pos[1] * const.CELL_SIZE, pos[0] * const.CELL_SIZE,
                          const.CELL_SIZE, const.CELL_SIZE)
-        self.change_color(self.cell.state.value)
-        self.highlighted_cells = list()
+        self.change_color(self.board[pos].state.value)
 
     def click(self) -> None:
         """Вызывает change_color при нажатии на кнопку."""
-        new_color = self.board.switch_cell_color(self.pos)
+        new_color = self.board.switch_cell_color(self.pos).value
         self.change_color(new_color)
 
     def change_color(self, color) -> None:
@@ -32,19 +31,20 @@ class Button(QPushButton):
 class Window(QWidget):
     """Класс игрового окна."""
 
-    def __init__(self) -> None:
+    def __init__(self, file_name: str) -> None:
         super().__init__()
+        self.board = Board(file_name)
         self.setWindowTitle('Hitori')
-        height = const.BOARD_SIZE[0] * const.CELL_SIZE
-        weight = const.BOARD_SIZE[1] * const.CELL_SIZE
+        height = self.board.size[0] * const.CELL_SIZE
+        weight = self.board.size[1] * const.CELL_SIZE
         self.setGeometry(const.WINDOW_POS[0], const.WINDOW_POS[1],
                          height, weight)
-        self.board = Board()
-        self.buttons = [[0] * const.BOARD_SIZE[0] for i in range(
-            const.BOARD_SIZE[1])]
-        for row in range(const.BOARD_SIZE[0]):
-            for col in range(const.BOARD_SIZE[1]):
-                self.buttons[row][col] = Button(self.board, (col, row), self)
+        self.highlighted_cells = list()
+        self.buttons = [[0] * self.board.size[0] for i in range(
+            self.board.size[1])]
+        for row in range(self.board.size[0]):
+            for col in range(self.board.size[1]):
+                self.buttons[row][col] = Button(self.board, (row, col), self)
                 self.buttons[row][col].clicked.connect(self.button_clicked)
         self.show()
 
@@ -57,13 +57,17 @@ class Window(QWidget):
             elif self.board[row, col].state == const.State.BLACK:
                 self.buttons[row][col].change_color(
                     const.CellColors.BLACK_CONFLICT)
+            self.highlighted_cells.append((row, col))
 
-    def button_clicked(self) -> None:
-        """Печатает 'Solved', если головоломка решена."""
+    def undo_highlight_conflict_cells(self) -> None:
         for row, col in self.highlighted_cells:
             color = self.board[row, col].state.value
             self.buttons[row][col].change_color(color)
+        self.highlighted_cells.clear()
 
+    def button_clicked(self) -> None:
+        """Печатает 'Solved', если головоломка решена."""
+        self.undo_highlight_conflict_cells()
         if self.board.is_solved():
             print('Solved')
         else:

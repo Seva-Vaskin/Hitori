@@ -8,8 +8,8 @@ class CellColors:
     BLACK = 'grey'
     WHITE = 'white'
     NEUTRAL = 'lightblue'
-    BLACK_CONFLICT = 'darkred'
-    WHITE_CONFLICT = 'lightred'
+    BLACK_CONFLICT = '#e60000'
+    WHITE_CONFLICT = '#ff8080'
 
 
 class State(Enum):
@@ -24,10 +24,8 @@ class State(Enum):
 
 
 WINDOW_POS = (450, 100)
-# Размеры поля в клетках (высота, ширина)
-BOARD_SIZE = (8, 8)
 
 # Размер клетки в пикселях
 CELL_SIZE = 100
 
-FILE = "../resources/levels/7x7.txt"
+MAX_SOLUTIONS = 10

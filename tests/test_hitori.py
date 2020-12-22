@@ -4,85 +4,57 @@ from hitori import const
 from hitori.board import Cell, Board
 
 
-def test_cell_without_same_numbers():
-    full_set = set(range(10))
-    neutral_cell = Cell(const.State.NEUTRAL, 0)
-    black_cell = Cell(const.State.BLACK, 1)
-    white_cell = Cell(const.State.WHITE, 2)
-    assert not neutral_cell.cell_without_same_numbers(full_set)
-    assert black_cell.cell_without_same_numbers(full_set)
-    assert not white_cell.cell_without_same_numbers(full_set)
-    white_nums = set()
-    for i in range(10):
-        cell = Cell(const.State.WHITE, i)
-        assert cell.cell_without_same_numbers(white_nums)
-    for i in range(10):
-        cell = Cell(const.State.WHITE, i)
-        assert not cell.cell_without_same_numbers(white_nums)
-
-
 def test_get_set_item():
-    board = Board()
+    board = Board("./resources/levels/1.txt")
     board[0, 0] = const.State.BLACK
     assert board[0, 0].state == const.State.BLACK
-    board[const.BOARD_SIZE[0] - 1, const.BOARD_SIZE[1] - 1] = const.State.WHITE
-    assert board[const.BOARD_SIZE[0] - 1, const.BOARD_SIZE[1] - 1].state == \
+    board[board.size[0] - 1, board.size[1] - 1] = const.State.WHITE
+    assert board[board.size[0] - 1, board.size[1] - 1].state == \
            const.State.WHITE
+    board[0, 0] = const.State.BLACK
+    assert board[0, 0].state == const.State.BLACK
+    board[0, 0] = const.State.NEUTRAL
+    assert board[0, 0].state == const.State.NEUTRAL
 
 
 def test_read_numbers_from_file():
-    numbers = Board.read_numbers_from_file(const.FILE)
-    assert type(numbers) == list
-    assert len(numbers) == const.BOARD_SIZE[0]
-    for row in range(const.BOARD_SIZE[0]):
-        assert type(numbers[row]) == list
-        assert len(numbers[row]) == const.BOARD_SIZE[1]
-        for col in range(const.BOARD_SIZE[1]):
-            assert type(numbers[row][col]) == int
+    board = Board("./resources/levels/1.txt")
+    assert type(board.board) == list
+    assert len(board.board) == board.size[0]
+    for row in range(board.size[0]):
+        assert type(board.board[row]) == list
+        assert len(board.board[row]) == board.size[1]
+        for col in range(board.size[1]):
+            assert type(board.board[row][col]) == Cell
 
 
 def test_on_board():
-    assert Board.on_board(0, 0)
-    assert not Board.on_board(const.BOARD_SIZE[0], 0)
-    assert not Board.on_board(0, const.BOARD_SIZE[1])
-    assert Board.on_board(const.BOARD_SIZE[0] - 1, const.BOARD_SIZE[1] - 1)
-
-
-def test_shaded_cell_without_common_sides():
-    board = Board()
-    assert board.shaded_cell_without_common_sides(0, 0)
-    board[0, 0] = const.State.BLACK
-    assert board.shaded_cell_without_common_sides(0, 0)
-    board[0, 1] = const.State.BLACK
-    assert not board.shaded_cell_without_common_sides(0, 0)
-    assert not board.shaded_cell_without_common_sides(0, 1)
+    board = Board("./resources/levels/1.txt")
+    assert board.on_board(0, 0)
+    assert not board.on_board(board.size[0], 0)
+    assert not board.on_board(0, board.size[1])
+    assert board.on_board(board.size[0] - 1, board.size[1] - 1)
 
 
 def test_bfs():
-    board = Board()
-    used = [[False] * const.BOARD_SIZE[1] for i in range(const.BOARD_SIZE[0])]
-    board[0, 0] = const.State.WHITE
-    board[0, 1] = const.State.WHITE
-    board[1, 1] = const.State.WHITE
-    board[2, 0] = const.State.WHITE
-    board.bfs(0, 0, used)
-    for row in range(const.BOARD_SIZE[0]):
-        for col in range(const.BOARD_SIZE[1]):
-            if (row, col) in ((0, 0), (0, 1), (1, 1)):
-                assert used[row][col]
-            else:
-                assert not used[row][col]
+    board = Board("./resources/levels/1.txt")
+    for row in range(board.size[0]):
+        for col in range(board.size[1]):
+            board[row, col] = const.State.WHITE
+    assert len(board._bfs((0, 0))) == board.size[0] * board.size[1]
+    board[0, 1] = const.State.BLACK
+    assert len(board._bfs((0, 0))) == board.size[0] * board.size[1] - 1
 
 
 def test_is_solved():
-    board = Board()
+    board = Board("./resources/levels/3.txt")
     assert not board.is_solved()
-    for row in range(const.BOARD_SIZE[0]):
-        for col in range(const.BOARD_SIZE[1]):
+    for row in range(board.size[0]):
+        for col in range(board.size[1]):
             board[row, col] = const.State.BLACK
     assert not board.is_solved()
-    for row in range(const.BOARD_SIZE[0]):
-        for col in range(const.BOARD_SIZE[1]):
+    for row in range(board.size[0]):
+        for col in range(board.size[1]):
             board[row, col] = const.State.WHITE
     assert not board.is_solved()
     blacks = [(0, 1), (0, 5), (0, 7),
@@ -98,3 +70,33 @@ def test_is_solved():
     assert board.is_solved()
     board[6, 3] = const.State.BLACK
     assert not board.is_solved()
+
+
+def test_board_to_str():
+    board = Board("./resources/levels/3.txt")
+    blacks = [(1, 1), (2, 3), (0, 1)]
+    whites = [(2, 2), (0, 0)]
+    for pos in blacks:
+        board[pos] = const.State.BLACK
+    for pos in whites:
+        board[pos] = const.State.WHITE
+    s = str(board)
+    rows = s.split('\n')
+    for i in range(board.size[0]):
+        row = rows[i].split()
+        for j in range(board.size[1]):
+            if (i, j) in blacks:
+                assert row[j] == 'B'
+            elif (i, j) in whites:
+                assert row[j] == 'W'
+            else:
+                assert row[j] == 'N'
+
+
+def test_switch_cell_color():
+    board = Board("./resources/levels/3.txt")
+    cells = [(1, 1), (2, 3), (0, 1)]
+    for pos in cells:
+        assert board.switch_cell_color(pos) == const.State.WHITE
+        assert board.switch_cell_color(pos) == const.State.BLACK
+        assert board.switch_cell_color(pos) == const.State.WHITE

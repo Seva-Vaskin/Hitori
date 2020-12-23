@@ -1,0 +1,11 @@
+[tool.coverage.run]
+source = ["hitori"]
+omit = ["hitori/__init__.py",
+        "hitori/__main__.py",
+        "hitori/const.py",
+        "hitori/solver/__init__.py",
+        "hitori/window.py",
+        "setup.py",
+        "tests/__init__.py",
+        "tests/test_hitori.py",
+        "tests/test_solver.py"]

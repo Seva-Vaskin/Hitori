@@ -65,7 +65,6 @@ def _recursion(board: Board, cell_id: int = 0,
     if board[row, col].state != const.State.NEUTRAL:
         solutions += _recursion(board, cell_id + 1, max_solutions)
     else:
-        # TODO Избавиться от копирования, реализовать откат ходов
         b1 = deepcopy(board)
         if _change(b1, row, col, const.State.WHITE):
             solutions += _recursion(b1, cell_id + 1, max_solutions)

@@ -40,11 +40,11 @@ class Window(QWidget):
         self.setGeometry(const.WINDOW_POS[0], const.WINDOW_POS[1],
                          height, weight)
         self.highlighted_cells = list()
-        self.buttons = [[0] * self.board.size[0] for i in range(
-            self.board.size[1])]
+        self.buttons = [[Button(self.board, (row, col), self) for col in
+                         range(self.board.size[1])]
+                        for row in range(self.board.size[0])]
         for row in range(self.board.size[0]):
             for col in range(self.board.size[1]):
-                self.buttons[row][col] = Button(self.board, (row, col), self)
                 self.buttons[row][col].clicked.connect(self.button_clicked)
         self.show()
 

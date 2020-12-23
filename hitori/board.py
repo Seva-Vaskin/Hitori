@@ -44,15 +44,15 @@ class Board:
         return self.board[pos[0]][pos[1]]
 
     def __setitem__(self, pos: Pos, new_state: const.State) -> None:
-        """"Устанавливает в клетку заданное значение;
+        """Устанавливает в клетку заданное значение;
         Обновляет конфликты на поле.
         """
         if self[pos].state == new_state:
             return
         # отмена конфликтов
-        if self[pos].state == const.State.WHITE and self[pos].conflicts != 0:
+        if self[pos].state == const.State.WHITE:
             self._update_white_errors(pos, -1)
-        if self[pos].state == const.State.BLACK and self[pos].conflicts != 0:
+        if self[pos].state == const.State.BLACK:
             self._update_black_errors(pos, -1)
         # добавление конфликтов
         if new_state == const.State.WHITE:
@@ -90,8 +90,8 @@ class Board:
 
     def _update_white_errors(self, pos: Pos, sign: int) -> None:
         """Обновляет конфликты белых ячеек."""
-        self.check_row(pos, sign)
-        self.check_column(pos, sign)
+        self._update_white_errors_row(pos, sign)
+        self._update_white_errors_column(pos, sign)
 
     def _update_black_errors(self, pos: Pos, sign: int) -> None:
         """Обновляет конфликты чёрных ячеек."""
@@ -107,8 +107,10 @@ class Board:
             self.change_conflicts(pos, sign)
 
     def switch_cell_color(self, pos: Pos) -> const.State:
-        # TODO документация неверная, непонятно на что изменяется
-        """Изменяет состояние клетки. Возвращает новое состояние."""
+        """Изменяет состояние клетки:
+        с нейтрального на белый, с белого на чёрный, с чёрного на белый.
+        Возвращает новое состояние.
+        """
         if self[pos].state == const.State.WHITE:
             self[pos] = const.State.BLACK
         else:
@@ -130,33 +132,33 @@ class Board:
         queue.put(pos)
         delta = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         while not queue.empty():
-            r, c = queue.get()
-            for d_row, d_col in delta:
-                neighbor_row = r + d_row
-                neighbor_col = c + d_col
-                if not self.on_board(neighbor_row, neighbor_col):
+            row, col = queue.get()
+            for delta_row, delta_col in delta:
+                new_row = row + delta_row
+                new_col = col + delta_col
+                if not self.on_board(new_row, new_col):
                     continue
-                if self[neighbor_row, neighbor_col].state != const.State.WHITE:
+                if self[new_row, new_col].state != const.State.WHITE:
                     continue
-                if (neighbor_row, neighbor_col) in used:
+                if (new_row, new_col) in used:
                     continue
-                used.add((neighbor_row, neighbor_col))
-                queue.put((neighbor_row, neighbor_col))
+                used.add((new_row, new_col))
+                queue.put((new_row, new_col))
         return used
 
-    def check_row(self, pos: Pos, sign: int) -> None:
+    def _update_white_errors_row(self, pos: Pos, sign: int) -> None:
+        """Перебирает элементы строки, обновляет конфликты белых ячеек."""
         row, col = pos
         for i in range(self.size[1]):
             if i == col or self[row, i].number != self[pos].number:
                 continue
             if self[row, i].state != const.State.WHITE:
                 continue
-            if self[row, i].conflicts == 1:
-                self.errors.conflicts.add((row, i))
             self.change_conflicts((row, i), sign)
             self.change_conflicts(pos, sign)
 
-    def check_column(self, pos: Pos, sign: int) -> None:
+    def _update_white_errors_column(self, pos: Pos, sign: int) -> None:
+        """Перебирает элементы столбца, обновляет конфликты белых ячеек."""
         row, col = pos
         for i in range(self.size[0]):
             if i == row or self[i, col].number != self[pos].number:
@@ -188,6 +190,6 @@ class Board:
 class RuleError:
     """Класс ошибок."""
 
-    def __init__(self, board: Board):
+    def __init__(self, board: Board) -> None:
         self.conflicts = set()
         self.neutral_cells = board.size[0] * board.size[1]

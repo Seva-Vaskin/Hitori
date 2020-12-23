@@ -169,7 +169,9 @@ class Board:
             self.change_conflicts(pos, sign)
 
     def change_conflicts(self, pos: Pos, value: int) -> None:
-        """Прибавялет к self[pos].conflicts значение value."""
+        """Увеличивает счётчик конфликтов ячейки с координатами pos
+        на значние value.
+        """
         if self[pos].conflicts == 0 and self[pos].conflicts + value != 0:
             self.errors.conflicts.add(pos)
         elif self[pos].conflicts != 0 and self[pos].conflicts + value == 0:

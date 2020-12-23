@@ -4,12 +4,13 @@ from PyQt5.QtWidgets import QWidget, QPushButton
 
 from hitori import const
 from hitori.board import Board
+from typing import Tuple
 
 
 class Button(QPushButton):
     """Класс кнопки."""
 
-    def __init__(self, board: Board, pos, *args) -> None:
+    def __init__(self, board: Board, pos: Tuple[int, int], *args) -> None:
         super().__init__(str(board[pos].number), *args)
         self.clicked.connect(self.click)
         self.pos = pos
@@ -19,11 +20,13 @@ class Button(QPushButton):
         self.change_color(self.board[pos].state.value)
 
     def click(self) -> None:
-        """Вызывает change_color при нажатии на кнопку."""
+        """Вызывает change_color при нажатии на кнопку.
+        Меняет цвет логической кнопки.
+        """
         new_color = self.board.switch_cell_color(self.pos).value
         self.change_color(new_color)
 
-    def change_color(self, color) -> None:
+    def change_color(self, color: str) -> None:
         """Перекрашивает кнопку в нужный цвет."""
         self.setStyleSheet("QPushButton { background-color: %s }" % color)
 
@@ -60,6 +63,7 @@ class Window(QWidget):
             self.highlighted_cells.append((row, col))
 
     def undo_highlight_conflict_cells(self) -> None:
+        """Отменяет подсветку конфликтующих ячеек."""
         for row, col in self.highlighted_cells:
             color = self.board[row, col].state.value
             self.buttons[row][col].change_color(color)

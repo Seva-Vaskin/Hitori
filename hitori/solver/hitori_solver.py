@@ -1,3 +1,5 @@
+"""Реализация поиска решения головоломки."""
+
 from ..board import Board
 from .. import const
 

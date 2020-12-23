@@ -16,11 +16,11 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_solver(file_name: str):
+def run_solver(file_name: str) -> None:
     hitori_solver.solve(file_name)
 
 
-def run_gui(file_name: str):
+def run_gui(file_name: str) -> None:
     app = QApplication(sys.argv)
     field = window.Window(file_name)
     sys.exit(app.exec_())

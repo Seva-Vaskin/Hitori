@@ -7,7 +7,7 @@ from copy import deepcopy
 def _change(board: Board, row: int, col: int, state: const.State) -> bool:
     """Пытается изменить состояние клетки (row, col) на state. Если
     получилось, возвращает true, иначе false.
-    !!! В случае неудачи не изменяет поле.
+    В случае неудачи не изменяет поле.
     """
     delta = [(0, 1), (0, -1), (1, 0), (-1, 0)]
     assert board[row, col].state == const.State.NEUTRAL
@@ -46,7 +46,9 @@ def _change(board: Board, row: int, col: int, state: const.State) -> bool:
 
 def _recursion(board: Board, cell_id: int = 0,
                max_solutions: int = const.MAX_SOLUTIONS) -> int:
-    """???"""
+    """Реализует рекурсивный перебор состояний доски для поиска решений.
+    Возвращает количество найденных решений.
+    """
     if max_solutions == 0:
         return 0
 
@@ -76,9 +78,10 @@ def _recursion(board: Board, cell_id: int = 0,
 
 
 def solve(file_name: str) -> None:
+    """Находит решение(-я) головоломки."""
     board = Board(file_name)
     solutions = _recursion(board)
     if solutions == 0:
-        print("Нет решений")
+        print("Нет решений.")
     else:
         print("Найдено решений: %d" % solutions)

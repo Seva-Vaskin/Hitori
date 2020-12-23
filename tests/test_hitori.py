@@ -1,4 +1,4 @@
-"""Тестовый модуль."""
+"""Тестовый модуль файла board.py."""
 
 from hitori import const
 from hitori.board import Cell, Board

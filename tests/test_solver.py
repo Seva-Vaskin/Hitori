@@ -1,3 +1,5 @@
+"""Тестовый модуль файла hitori_solver.py."""
+
 from hitori.solver import hitori_solver
 
 

@@ -23,9 +23,11 @@ class State(Enum):
     NEUTRAL = CellColors.NEUTRAL
 
 
+# Позиция игрового окна на экране
 WINDOW_POS = (450, 100)
 
 # Размер клетки в пикселях
 CELL_SIZE = 100
 
+# Ограничение на количество найденных решений головоломки
 MAX_SOLUTIONS = 10

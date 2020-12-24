@@ -8,7 +8,7 @@ with open("requirements.txt") as f:
 
 setuptools.setup(
     name="hitori",
-    version="1.0",
+    version="0.1.0",
     author="Diundina Maria",
     author_email="mary.diundina@gmail.com",
     description="Данное приложение является реализацией головоломки 'Хитори'.",

@@ -70,7 +70,9 @@ class Window(QWidget):
         self.highlighted_cells.clear()
 
     def button_clicked(self) -> None:
-        """Печатает 'Solved', если головоломка решена."""
+        """Печатает 'Solved', если головоломка решена.
+        Иначе вызывает подсветку конфликтующих ячеек.
+        """
         self.undo_highlight_conflict_cells()
         if self.board.is_solved():
             print('Solved')

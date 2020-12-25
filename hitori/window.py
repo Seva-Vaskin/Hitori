@@ -3,14 +3,13 @@
 from PyQt5.QtWidgets import QWidget, QPushButton
 
 from hitori import const
-from hitori.board import Board
-from typing import Tuple
+from hitori.board import Board, Pos
 
 
 class Button(QPushButton):
     """Класс кнопки."""
 
-    def __init__(self, board: Board, pos: Tuple[int, int], *args) -> None:
+    def __init__(self, board: Board, pos: Pos, *args) -> None:
         super().__init__(str(board[pos].number), *args)
         self.clicked.connect(self.click)
         self.pos = pos

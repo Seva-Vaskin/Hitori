@@ -23,6 +23,7 @@ def run_solver(file_name: str) -> None:
 def run_gui(file_name: str) -> None:
     app = QApplication(sys.argv)
     field = window.Window(file_name)
+    field.show()
     sys.exit(app.exec_())
 
 

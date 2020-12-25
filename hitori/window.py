@@ -49,7 +49,6 @@ class Window(QWidget):
         for row in range(self.board.size[0]):
             for col in range(self.board.size[1]):
                 self.buttons[row][col].clicked.connect(self.button_clicked)
-        self.show()
 
     def highlight_conflict_cells(self) -> None:
         """Подсвечивает конфликтующие между собой ячейки."""

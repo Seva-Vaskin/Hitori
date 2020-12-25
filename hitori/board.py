@@ -64,7 +64,7 @@ class Board:
             self.white_cells[pos] = self[pos]
         elif self[pos].state == const.State.WHITE:
             self.white_cells.pop(pos)
-        # обновление количества нейтриальных ячеек
+        # обновление количества нейтральных ячеек
         if self[pos].state == const.State.NEUTRAL:
             self.errors.neutral_cells -= 1
         if new_state == const.State.NEUTRAL:
@@ -170,7 +170,7 @@ class Board:
 
     def change_conflicts(self, pos: Pos, value: int) -> None:
         """Увеличивает счётчик конфликтов ячейки с координатами pos
-        на значние value.
+        на значение value.
         """
         if self[pos].conflicts == 0 and self[pos].conflicts + value != 0:
             self.errors.conflicts.add(pos)

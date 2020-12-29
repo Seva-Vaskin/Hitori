@@ -8,6 +8,8 @@ from typing import List
 
 
 class Solver:
+    """Класс, реализующий поиск решения головоломки."""
+
     @classmethod
     def _change(cls, board: Board, row: int, col: int, state: const.State) -> \
             bool:
@@ -24,7 +26,8 @@ class Solver:
                 new_col = col + delta_col
                 if not board.on_board(new_row, new_col):
                     continue
-                if board[Position(new_row, new_col)].state == const.State.BLACK:
+                if board[Position(new_row, new_col)].state == \
+                        const.State.BLACK:
                     board[Position(row, col)] = const.State.NEUTRAL
                     return False
                 if board[Position(new_row, new_col)].state == \
@@ -41,7 +44,7 @@ class Solver:
                     new_row += delta_row
                     new_col += delta_col
                     if board[Position(new_row, new_col)].number != board[
-                        Position(row, col)].number:
+                         Position(row, col)].number:
                         continue
                     if board[Position(new_row, new_col)].state == \
                             const.State.WHITE:
@@ -80,11 +83,12 @@ class Solver:
         else:
             b1 = deepcopy(board)
             if cls._change(b1, row, col, const.State.WHITE):
-                solutions.extend(cls._recursion(b1, cell_id + 1, max_solutions))
+                solutions.extend(
+                    cls._recursion(b1, cell_id + 1, max_solutions))
             b2 = deepcopy(board)
             if cls._change(b2, row, col, const.State.BLACK):
-                solutions.extend(cls._recursion(b2, cell_id + 1,
-                                                max_solutions - len(solutions)))
+                solutions.extend(cls._recursion(
+                    b2, cell_id + 1, max_solutions - len(solutions)))
 
         return solutions
 

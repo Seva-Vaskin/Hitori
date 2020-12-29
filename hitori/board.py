@@ -44,6 +44,7 @@ class Board:
         return cls(numbers)
 
     def _read_numbers(self, numbers) -> None:
+        """"""
         self.size = (len(numbers), len(numbers[0]))
         for i in range(self.size[0]):
             self.board.append(list())

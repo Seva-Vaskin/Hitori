@@ -1,18 +1,21 @@
 """Модуль, реализующий игровую логику."""
 
+from __future__ import annotations
+
 from hitori import const
 from queue import Queue
-from typing import Set
+from typing import Set, List
 from dataclasses import dataclass
 from pathlib import Path
 
 
 @dataclass
 class Position:
+    """Класс для представления координат клетки на доске."""
     row: int
     col: int
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash((self.row, self.col))
 
 
@@ -31,20 +34,20 @@ class Board:
     def __init__(self, numbers) -> None:
         self.board = list()
         self.size = (0, 0)
-        self._read_numbers(numbers)
+        self._init_cells(numbers)
         self.white_cells = dict()
         self.errors = RuleError(self)
 
     @classmethod
-    def from_file(cls, file_name: Path):
+    def from_file(cls, file_name: Path) -> Board:
         """Читает игровое поле из файла."""
         with file_name.open() as f:
             numbers = [[int(item) for item in row.split()] for row in
                        f.readlines()]
         return cls(numbers)
 
-    def _read_numbers(self, numbers) -> None:
-        """"""
+    def _init_cells(self, numbers: List[List[int]]) -> None:
+        """Инициализирует массив self.board из массива numbers."""
         self.size = (len(numbers), len(numbers[0]))
         for i in range(self.size[0]):
             self.board.append(list())

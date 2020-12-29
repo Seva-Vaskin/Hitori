@@ -3,18 +3,18 @@
 from PyQt5.QtWidgets import QWidget, QPushButton
 
 from hitori import const
-from hitori.board import Board, Pos
+from hitori.board import Board, Position
 
 
 class Button(QPushButton):
     """Класс кнопки."""
 
-    def __init__(self, board: Board, pos: Pos, *args) -> None:
+    def __init__(self, board: Board, pos: Position, *args) -> None:
         super().__init__(str(board[pos].number), *args)
         self.clicked.connect(self.click)
         self.pos = pos
         self.board = board
-        self.setGeometry(pos[1] * const.CELL_SIZE, pos[0] * const.CELL_SIZE,
+        self.setGeometry(pos.col * const.CELL_SIZE, pos.row * const.CELL_SIZE,
                          const.CELL_SIZE, const.CELL_SIZE)
         self.change_color(self.board[pos].state.value)
 
@@ -33,16 +33,16 @@ class Button(QPushButton):
 class Window(QWidget):
     """Класс игрового окна."""
 
-    def __init__(self, file_name: str) -> None:
+    def __init__(self, board: Board) -> None:
         super().__init__()
-        self.board = Board(file_name)
+        self.board = board
         self.setWindowTitle('Hitori')
         height = self.board.size[0] * const.CELL_SIZE
         weight = self.board.size[1] * const.CELL_SIZE
         self.setGeometry(const.WINDOW_POS[0], const.WINDOW_POS[1],
                          height, weight)
         self.highlighted_cells = list()
-        self.buttons = [[Button(self.board, (row, col), self) for col in
+        self.buttons = [[Button(self.board, Position(row, col), self) for col in
                          range(self.board.size[1])]
                         for row in range(self.board.size[0])]
         for row in range(self.board.size[0]):
@@ -51,20 +51,20 @@ class Window(QWidget):
 
     def highlight_conflict_cells(self) -> None:
         """Подсвечивает конфликтующие между собой ячейки."""
-        for row, col in self.board.errors.conflicts:
-            if self.board[row, col].state == const.State.WHITE:
-                self.buttons[row][col].change_color(
+        for pos in self.board.errors.conflicts:
+            if self.board[pos].state == const.State.WHITE:
+                self.buttons[pos.row][pos.col].change_color(
                     const.CellColors.WHITE_CONFLICT)
-            elif self.board[row, col].state == const.State.BLACK:
-                self.buttons[row][col].change_color(
+            elif self.board[pos].state == const.State.BLACK:
+                self.buttons[pos.row][pos.col].change_color(
                     const.CellColors.BLACK_CONFLICT)
-            self.highlighted_cells.append((row, col))
+            self.highlighted_cells.append(pos)
 
     def undo_highlight_conflict_cells(self) -> None:
         """Отменяет подсветку конфликтующих ячеек."""
-        for row, col in self.highlighted_cells:
-            color = self.board[row, col].state.value
-            self.buttons[row][col].change_color(color)
+        for pos in self.highlighted_cells:
+            color = self.board[pos].state.value
+            self.buttons[pos.row][pos.col].change_color(color)
         self.highlighted_cells.clear()
 
     def button_clicked(self) -> None:

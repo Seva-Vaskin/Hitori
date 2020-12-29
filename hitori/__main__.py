@@ -2,7 +2,12 @@ import sys
 from PyQt5.QtWidgets import QApplication
 from hitori import window
 import argparse
-from hitori.solver import hitori_solver
+from hitori.solver.hitori_solver import Solver
+from hitori.board import Board
+
+from pathlib import Path
+
+LEVEL_ERROR = 1
 
 
 def parse_args() -> argparse.Namespace:
@@ -16,20 +21,33 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_solver(file_name: str) -> None:
-    hitori_solver.solve(file_name)
+def run_solver(file_name: Path) -> None:
+    solver = Solver()
+    board = Board.from_file(file_name)
+    solutions = solver.solve(board)
+    if not solutions:
+        print("Нет решений.")
+    else:
+        print("Найдено решений: %d" % len(solutions))
+        for solution in solutions:
+            print(solution)
+            print()
 
 
-def run_gui(file_name: str) -> None:
+def run_gui(file_name: Path) -> None:
     app = QApplication(sys.argv)
-    field = window.Window(file_name)
+    board = Board.from_file(file_name)
+    field = window.Window(board)
     field.show()
     sys.exit(app.exec_())
 
 
 if __name__ == '__main__':
     args = parse_args()
-    file_name = "./resources/levels/%d.txt" % args.level
+    file_name = Path.cwd() / 'resources' / 'levels' / ('%d.txt' % args.level)
+    if not file_name.exists() or not file_name.is_file():
+        print("Уровень не найден", file=sys.stderr)
+        sys.exit(LEVEL_ERROR)
     if args.solve:
         run_solver(file_name)
     else:
